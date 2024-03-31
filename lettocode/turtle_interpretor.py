@@ -54,6 +54,12 @@ class Interpretor():
             return 0
         if node.name == ["ID","input"]:
             return input(self.calculate_expression(node.childs[0],scope_memory))
+        if node.name == ["ID","chr"]:
+            return chr(self.calculate_expression(node.childs[0],scope_memory))
+        if node.name == ["ID","int"]:
+            return int(self.calculate_expression(node.childs[0],scope_memory))
+        if node.name == ["ID","ord"]:
+            return ord(self.calculate_expression(node.childs[0],scope_memory))
         if node.name[0] == "ID":
             if len(node.childs) == 1 and node.childs[0].name[0] == "INDEX":
                 index_expr_node=node.childs[0].childs[0]

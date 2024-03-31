@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../lettocode/')#Bricolage :)
+sys.path.append('../lettocode/')
 
 from lex_analysis import Lexer
 from parser import LLParser
@@ -8,7 +8,8 @@ from turtle_interpretor import Interpretor,ScopeMemory
 input_expression = """
 s=[3,1,2];
 s[0]=0;
-print(s);
+print(chr(ord("A")+ord(" ")));
+print("\n");
 """
 
 #Analyse lexicale

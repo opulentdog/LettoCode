@@ -1,5 +1,5 @@
 import sys
-sys.path.append('../lettocode/')#Bricolage :)
+sys.path.append('../lettocode/')
 
 from lex_analysis import Lexer
 from parser import LLParser
