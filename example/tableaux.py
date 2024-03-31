@@ -6,7 +6,8 @@ from parser import LLParser
 from turtle_interpretor import Interpretor,ScopeMemory
 # Example usage
 input_expression = """
-s="hey";
+s=[3,1,2];
+s[0]=0;
 print(s);
 """
 
@@ -19,7 +20,7 @@ tokens=lexer.lex(input_expression)
 parser=LLParser(tokens)
 tree=parser.parse()
 
-#print(tree)
+print(tree)
 #exit()
 
 #Interprétation de l'arbre

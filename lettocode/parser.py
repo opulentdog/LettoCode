@@ -4,7 +4,7 @@ from trees import Tree
 errorhandler=ErrorHandler()
 
 class LLParser:
-    operators_hierarchy=[[["INT_TYPE","STRING_TYPE"],1],
+    operators_hierarchy=[#[["INT_TYPE","STRING_TYPE"],1],
                      [["SET"],2], 
                      [["AND","OR"],2],
                      [["NOT"],1],
@@ -44,7 +44,7 @@ class LLParser:
             return token
         return ["END", ""]
 
-    def parse_term(self):
+    def parse_term(self):#The returning value is an array of nodes
         inital_index=self.index
         initial_token=self.current_token
 
@@ -59,13 +59,23 @@ class LLParser:
                     self.index=inital_index
                     self.current_token=initial_token
                     return None
-                return Tree(token,[Tree(["INDEX",""],[index_token])])
-            return Tree(token)
+                return [Tree(token,[Tree(["INDEX",""],[index_token])])]
+            return [Tree(token)]
         elif token[0] == "LPAREN":
-            self.current_token = self.get_next_token()
-            node = self.parse_expression()
-            if self.current_token[0] == "COLON":
-                self.get_next_token()
+            nodes=[]
+            retry=True
+            while retry:
+                self.current_token = self.get_next_token()
+                node = self.parse_expression()
+                if node is None:
+                    self.error_message="Expected expression"
+                    self.error_index = self.index-1
+                    self.index=inital_index
+                    self.current_token=initial_token
+                    return None
+                nodes+=node
+                if self.current_token[0] != "COLON":
+                    retry=False
             if self.current_token[0] != "RPAREN":
                 self.error_message="Expected ')'"
                 self.error_index = self.index-1
@@ -73,14 +83,37 @@ class LLParser:
                 self.current_token=initial_token
                 return None
             self.current_token = self.get_next_token()
-            return node
+            return nodes
+        elif token[0] == "LBRACKET":
+            nodes=[]
+            retry=True
+            while retry:
+                self.current_token = self.get_next_token()
+                node = self.parse_expression()
+                if node is None:
+                    self.error_message="Expected expression"
+                    self.error_index = self.index-1
+                    self.index=inital_index
+                    self.current_token=initial_token
+                    return None
+                nodes+=node
+                if self.current_token[0] != "COLON":
+                    retry=False
+            if self.current_token[0] != "RBRACKET":
+                self.error_message="Expected ')'"
+                self.error_index = self.index-1
+                self.index=inital_index
+                self.current_token=initial_token
+                return None
+            self.current_token = self.get_next_token()
+            return [Tree(["LIST",""],nodes)]
         else:
             self.error_message="Expected term"
             self.error_index = self.index-1
             self.index=inital_index
             self.current_token=initial_token
             return None
-    def parse_expression(self,precedence=0):
+    def parse_expression(self,precedence=0):#The returning value is an array of nodes
         inital_index=self.index
         initial_token=self.current_token
         initial_error_message=self.error_message
@@ -94,14 +127,14 @@ class LLParser:
                 token = self.current_token
                 self.current_token = self.get_next_token()
                 node = self.parse_expression(precedence)
-                if node is None:
+                if node is None or (token[0] == "ID" and node[0].name[0]=="LIST"):#La deuxième partie de la condition permet de ne pas transformer les index en liste mais c'est du bricolage ex "s[0]=0" sinon "[0]" devient une liste et est passé en argument de la fonction s
                     self.index=inital_index
                     self.current_token=initial_token
                     self.error_message=initial_error_message
                     self.error_index=initial_error_index
                     #print(self.current_token)
                     return self.parse_expression(precedence+1)
-                return Tree([token[0], token[1]], [node])
+                return [Tree([token[0], token[1]], node)]
             else:
                 return self.parse_expression(precedence+1)
         elif self.operators_hierarchy[precedence][1] == 2:#Opérateur Binaire
@@ -119,25 +152,32 @@ class LLParser:
                     self.index=inital_index
                     self.current_token=initial_token
                     return None
-                node = Tree([token[0], token[1]], [node, right])
+                node = [Tree([token[0], token[1]], node+right)]
             return node
         else:
             raise Exception("L'arité de l'opérateur n'est pas supportée")
+    def parse_single_expression(self):
+        expr = self.parse_expression() 
+        if(expr is None or len(expr)!=1):
+            self.error_message="Expected a single expression" 
+            self.error_index = self.index-1 
+            return None
+        return expr[0]
     def parse_expression_statement(self): 
         inital_index=self.index
         initial_token=self.current_token
         #First should be an expression 
-        expr = self.parse_expression() 
+        expr = self.parse_single_expression() 
         if(expr == None): 
             self.index=inital_index 
             self.current_token=initial_token 
-            return None 
-        
+            return None
+
         #Next token should be a semicolon 
         if self.current_token[0] == "SEMICOLON": 
             self.current_token = self.get_next_token() 
             return expr 
-        else: 
+        elif self.error_message==None: 
             self.error_message="Expected ';'" 
             self.error_index = self.index-1 
             return None
@@ -218,7 +258,7 @@ class LLParser:
         if print_token[0] == "IF":
             self.current_token = self.get_next_token()
             #Next should be an expression
-            expr = self.parse_expression()
+            expr = self.parse_single_expression()
             if(expr == None):
                 self.index=inital_index
                 self.current_token=initial_token
@@ -276,7 +316,7 @@ class LLParser:
         if self.current_token[0] == "LBRACKET":
             self.current_token = self.get_next_token()
             #Next an expression
-            node = self.parse_expression()
+            node = self.parse_single_expression()
             #Finally a closing right bracket
             if self.current_token[0] != "RBRACKET":
                 self.error_message="Expected ']'"
@@ -297,7 +337,7 @@ class LLParser:
         if print_token[0] == "WHILE":
             self.current_token = self.get_next_token()
             #Next should be an expression
-            expr = self.parse_expression()
+            expr = self.parse_single_expression()
             if(expr == None):
                 self.index=inital_index
                 self.current_token=initial_token

@@ -65,6 +65,11 @@ class Interpretor():
             return int(node.name[1])
         if node.name[0] == "STRING":
             return node.name[1][1:-1]
+        if node.name[0] == "LIST":
+            arr=[]
+            for child in node.childs:
+                arr.append(self.calculate_expression(child,scope_memory))
+            return arr
         if node.name[0] == "SET":
             r=self.calculate_expression(node.childs[1],scope_memory)
             if len(node.childs[0].childs) == 1 and node.childs[0].childs[0].name[0] == "INDEX":
