@@ -51,10 +51,21 @@ class LLParser:
         token = self.current_token
         if token[0] in ["NUM","STRING","ID"]:
             self.current_token = self.get_next_token()
+            if(token[0] == "ID" and self.current_token[0] == "LBRACKET"):#Liste
+                index_token=self.parse_index()
+                if index_token is None:
+                    self.error_message="Invalid Index"
+                    self.error_index = self.index-1
+                    self.index=inital_index
+                    self.current_token=initial_token
+                    return None
+                return Tree(token,[Tree(["INDEX",""],[index_token])])
             return Tree(token)
         elif token[0] == "LPAREN":
             self.current_token = self.get_next_token()
             node = self.parse_expression()
+            if self.current_token[0] == "COLON":
+                self.get_next_token()
             if self.current_token[0] != "RPAREN":
                 self.error_message="Expected ')'"
                 self.error_index = self.index-1
@@ -258,6 +269,26 @@ class LLParser:
             self.index=inital_index
             self.current_token=initial_token
             return None
+    def parse_index(self):
+        inital_index=self.index
+        initial_token=self.current_token
+        #First token should be a left bracket
+        if self.current_token[0] == "LBRACKET":
+            self.current_token = self.get_next_token()
+            #Next an expression
+            node = self.parse_expression()
+            #Finally a closing right bracket
+            if self.current_token[0] != "RBRACKET":
+                self.error_message="Expected ']'"
+                self.error_index = self.index-1
+                self.index=inital_index
+                self.current_token=initial_token
+                return None
+            self.current_token = self.get_next_token()
+            return node
+        return None
+
+
     def parse_while(self):
         inital_index=self.index
         initial_token=self.current_token

@@ -1,7 +1,8 @@
 class Lexer:
     def __init__(self):
-        self.tokens=[["INT_TYPE",lambda s : self.match("int",s)],
-                ["STRING_TYPE",lambda s : self.match("string",s)],
+        self.tokens=[
+                #["INT_TYPE",lambda s : self.match("int",s)],
+                #["STRING_TYPE",lambda s : self.match("string",s)],
                 ["IF",lambda s : self.match("if",s)],
                 ["ELSE",lambda s : self.match("else",s)],
                 ["WHILE",lambda s : self.match("while",s)],
@@ -33,10 +34,11 @@ class Lexer:
                 ["NEWLINE", lambda s : self.match("\n",s)],
                 ["LPAREN", lambda s : self.match("(",s)],
                 ["RPAREN", lambda s : self.match(")",s)],
-                #["LBRACKET", lambda s : self.match("[",s)],#Listes pour plus tard
-                #["RBRACKET" , lambda s : self.match("]",s)],
+                ["LBRACKET", lambda s : self.match("[",s)],
+                ["RBRACKET" , lambda s : self.match("]",s)],
                 ["LBRACE" , lambda s : self.match("{",s)],
                 ["RBRACE" , lambda s : self.match("}",s)],
+                ["COLON", lambda s : self.match(",",s)],
                 ["SEMICOLON", lambda s : self.match(";",s)],
                 ["END",lambda s : ["",s]],
                 #Pour usage après l'analyse lexicale
