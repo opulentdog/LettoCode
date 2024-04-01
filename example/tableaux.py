@@ -4,12 +4,13 @@ sys.path.append('../lettocode/')
 from lex_analysis import Lexer
 from parser import LLParser
 from turtle_interpretor import Interpretor,ScopeMemory
+
 # Example usage
 input_expression = """
-s=[3,1,2];
-s[0]=0;
-print(chr(ord("A")+ord(" ")));
-print("\n");
+s1="Hello";
+s2=" Wor";
+s3="ld!\n";
+print(s1+s2+s3);
 """
 
 #Analyse lexicale

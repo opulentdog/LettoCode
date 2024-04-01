@@ -1,6 +1,7 @@
 class Tree:
-    def __init__(self, name=['root',''], childs=None): #Racine
+    def __init__(self, name=['root',''], childs=[],parent=None): #Racine
         self.name = name
+        self.parent=parent
         self.childs = []
         if childs is not None:
             for child in childs:
@@ -9,6 +10,7 @@ class Tree:
         return self.repr_name(self)+"\n"+"\n".join(self.array_arbre(self))
     def add(self, node):
         assert isinstance(node, Tree)
+        node.parent=self#Magic trick
         self.childs.append(node)
     def repr_name(self,a):
         return repr(a.name)

@@ -305,7 +305,7 @@ class LLParser:
                 self.error_index = self.index-1
             else:
                 self.error_message=initial_error
-                self.error_index=inital_error_index
+                self.error_index=initial_error_index
             self.index=inital_index
             self.current_token=initial_token
             return None

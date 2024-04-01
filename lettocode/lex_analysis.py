@@ -59,8 +59,12 @@ class Lexer:
 
     def match_id(self,s):
         i=0
-        while(i < len(s) and ((97<=ord(s[i]) and ord(s[i])<=122) or (65<=ord(s[i]) and ord(s[i])<=90))):
+        if i < len(s) and ((97<=ord(s[i]) and ord(s[i])<=122) or (65<=ord(s[i]) and ord(s[i])<=90)):
             i+=1
+            while(i < len(s) and ((97<=ord(s[i]) and ord(s[i])<=122) 
+                                  or (65<=ord(s[i]) and ord(s[i])<=90) 
+                                  or (48<=ord(s[i]) and ord(s[i])<=57))):
+                i+=1
         return [s[:i],s[i:]]
 
     def match_string(self,s):
