@@ -1,6 +1,6 @@
 from lex_analysis import Lexer
 from parser import LLParser
-from turtle_interpretor import Interpretor,ScopeMemory
+from interpretor import Interpretor,ScopeMemory
 # Example usage
 input_expression = """
 string name = input("Quel est la couleur du soleil? ");
