@@ -13,7 +13,7 @@ class Tree:
         node.parent=self#Magic trick
         self.childs.append(node)
     def repr_name(self,a):
-        return repr(a.name)
+        #return repr(a.name)
         if len(a.name)!=2:
             return a.name
         if a.name[0] in ["ID","STRING","NUM"]:

@@ -6,20 +6,9 @@ from parser import LLParser
 from turtle_interpretor import Interpretor,ScopeMemory
 # Example usage
 input_expression = """
-name = input("Quel est la couleur du soleil? ");
-if(name == "Jaune" || name == "Orange" || name=="Rouge"
-|| name == "jaune" || name == "orange" || name=="Rouge"){
-    x = 1;
-    print("Oui le soleil est bien ");
-    print(name);
-    print("!\n");
-}
-else{
-    y = 2;
-    print("Le soleil n'est pas ");
-    print(name);
-    print(".\n");
-}
+int num = input("Entrer Nombre :");
+        print("Pair\n");
+    print("Impair\n");
 """
 
 #Analyse lexicale
@@ -30,8 +19,8 @@ tokens=lexer.lex(input_expression)
 parser=LLParser(tokens)
 tree=parser.parse()
 
-print(tree)
-exit()
+#print(tree)
+#exit()
 
 #Interprétation de l'arbre
 turtle=Interpretor(tree)

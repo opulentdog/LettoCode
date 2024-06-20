@@ -6,19 +6,14 @@ from parser import LLParser
 from turtle_interpretor import Interpretor,ScopeMemory
 # Example usage
 input_expression = """
-name = input("Quel est la couleur du soleil? ");
-if(name == "Jaune" || name == "Orange" || name=="Rouge"
-|| name == "jaune" || name == "orange" || name=="Rouge"){
-    x = 1;
-    print("Oui le soleil est bien ");
-    print(name);
-    print("!\n");
-}
-else{
-    y = 2;
-    print("Le soleil n'est pas ");
-    print(name);
-    print(".\n");
+int b = 0;
+int a = 0;
+while(b != 0){
+    if(a > b){
+        a = a - b;
+    }else{
+        b = b - a;
+    }
 }
 """
 
